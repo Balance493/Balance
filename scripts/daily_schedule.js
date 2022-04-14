@@ -163,7 +163,7 @@ function deleteButtonEventClick() {
         categoryName = "Exercise";
     }
     else if (categoryName === '2') {
-        categoryName = "Productivity";
+        categoryName = "Productivity"
     }
     else if (categoryName === '3') {
         categoryName = "MentalWellbeing";
@@ -176,11 +176,18 @@ function deleteButtonEventClick() {
     console.log(taskDictionary[categoryName]["projected"].splice(indexToDelete, 1));
     console.log(delete addedTaskDict[eventId]);
     deleteButtonEventClickShow();
+    getNewScore(taskDictionary);
 }
 
 function completeButtonEventClick() {
     eventId = clickedEvent;
     categoryName = addedTaskDict[eventId];
+
+    // move the car forward on racetrack
+    daily_score = document.getElementById("dailyCircleNum").innerHTML;
+    projected_score = document.getElementById("projCircleNum").innerHTML;
+    $("#car").css("left", ((daily_score/projected_score)*$("#racetrack").width()) - 105);
+
     if (categoryName === '1') {
         categoryName = "Exercise";
     }
@@ -197,6 +204,7 @@ function completeButtonEventClick() {
     console.log(taskDictionary[categoryName]["daily"].push(eventId));
     console.log(delete addedTaskDict[eventId]);
     deleteButtonEventClickShow();
+    getNewScore(taskDictionary);
 }
 
 function addTaskToDictionary(eventIn) {
@@ -212,4 +220,5 @@ function addTaskToDictionary(eventIn) {
         categoryName = "MentalWellbeing";
     }
     console.log(taskDictionary[categoryName]["projected"].push(eventId));
+    getNewScore(taskDictionary);
 }
