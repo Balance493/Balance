@@ -22,24 +22,36 @@ $(document).ready(function () {
 
 
 function loadCalendar() {
-    Calendar = FullCalendar.Calendar;
-    calendarEl = document.getElementById('calendar');
-    Draggable = FullCalendar.Draggable;
-    containerEl = document.getElementById('external-events');
+    var Calendar = FullCalendar.Calendar;
+    var calendarEl = document.getElementById('calendar');
+    var Draggable = FullCalendar.Draggable;
+    var containerEl = document.getElementById('external-events');
 
     // initialize the external events for dragable feature
     new Draggable(containerEl, {
         itemSelector: '.fc-event',
         eventData: function (eventEl) {
+            eventCategory = addedTaskDict[eventEl.innerText];
+            desiredColor = '#000'
+            if (eventCategory === '1') {
+                desiredColor = '#ff4a4a';
+            }
+            else if (eventCategory === '2') {
+                desiredColor = '#00ff00';
+            }
+            else if (eventCategory === '3') {
+                desiredColor = '#95e5ff';
+            }
             return {
                 title: eventEl.innerText,
-                id: eventEl.innerText
+                id: eventEl.innerText,
+                color: desiredColor,
             };
         }
     });
 
     // init Calendar
-    calendar = new Calendar(calendarEl, {
+    var calendar = new Calendar(calendarEl, {
         initialView: 'timeGridDay',
         editable: true,
         selectable: true,
@@ -64,8 +76,22 @@ function addButton() {
     // get task text
     const taskText = document.getElementById("addTaskForm")[0].value;
 
+    // add task to task list dictionary with its category
+    // 0 is nothing, 1 is Exercise, 2 is Productivity 3 is Mental Wellbeing
+    const taskCategory = document.getElementById("addTaskForm")[1].value;
+    addedTaskDict[taskText] = taskCategory;
+
     fcEvent = document.createElement("div");
-    fcEvent.setAttribute("class", "fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event");
+    // change color based on category
+    if (taskCategory === '1') {
+        fcEvent.setAttribute("class", "Exercise fc-event fc-daygrid-event fc-daygrid-block-event");
+    }
+    else if (taskCategory === '2') {
+        fcEvent.setAttribute("class", "Productivity fc-event fc-daygrid-event fc-daygrid-block-event");
+    }
+    else if (taskCategory === '3') {
+        fcEvent.setAttribute("class", "MentalWellbeing fc-event fc-daygrid-event fc-daygrid-block-event");
+    }
 
     // crete a new inner div element
     fcMain = document.createElement("div");
@@ -85,22 +111,12 @@ function addButton() {
     const currentDiv = document.getElementById("addedEvents");
     currentDiv.appendChild(fcEvent)
 
-    // add task to task list dictionary with its category
-    // 0 is nothing, 1 is Exercise, 2 is Productivity 3 is Mental Wellbeing
-    const taskCategory = document.getElementById("addTaskForm")[1].value;
-    addedTaskDict[taskText] = taskCategory;
-
-    //  addedTask = document.getElementById(taskText);
-    //  topVal = addedTask.offsetTop
-    // if (topVal > 455) {
-    //     addedTask.style.display = 'none';
-    // }
     return false;
 }
 
 function addChosenTaskToDropDown(taskStringIn) {
     fcEvent = document.createElement("div");
-    fcEvent.setAttribute("class", "fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event");
+    fcEvent.setAttribute("class", "Exercise fc-event fc-daygrid-event fc-daygrid-block-event");
 
     // crete a new inner div element
     fcMain = document.createElement("div");
@@ -122,6 +138,7 @@ function addChosenTaskToDropDown(taskStringIn) {
 
     // add task to task list dictionary with its category
     // 0 is nothing, 1 is Exercise, 2 is Productivity 3 is Mental Wellbeing
+    // since this is coming from exercise wheel its always exercise
     const taskCategory = '1';
     addedTaskDict[taskStringIn] = taskCategory;
     return false;
@@ -206,7 +223,7 @@ function completeButtonEventClick() {
     projected_score = document.getElementById("projCircleNum").innerHTML;
     console.log("daily: " + document.getElementById("dailyCircleNum").innerHTML);
     console.log("proj:" + document.getElementById("projCircleNum").innerHTML);
-    $("#car").css("left", ((daily_score/projected_score)*$("#racetrack").width()) - 105);
+    $("#car").css("left", ((daily_score / projected_score) * $("#racetrack").width()) - 105);
 }
 
 function addTaskToDictionary(eventIn) {
@@ -229,5 +246,5 @@ function addTaskToDictionary(eventIn) {
     projected_score = document.getElementById("projCircleNum").innerHTML;
     console.log("daily: " + document.getElementById("dailyCircleNum").innerHTML);
     console.log("proj:" + document.getElementById("projCircleNum").innerHTML);
-    $("#car").css("left", ((daily_score/projected_score)*$("#racetrack").width()) - 105);
+    $("#car").css("left", ((daily_score / projected_score) * $("#racetrack").width()) - 105);
 }
